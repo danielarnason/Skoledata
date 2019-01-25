@@ -20,6 +20,7 @@ skoler = [tr.text.split(',  ') for tr in trs]
 df = pd.DataFrame(skoler, columns=['Skolenavn', 'Adresse', 'Postnrby', 'Tlf', 'Mail'])
 df['Tlf'] = [x.strip('tlf: ') for x in df['Tlf']]
 df['Mail'] = [x.strip('e-mail: ') for x in df['Mail']]
+df['Skolenavn'] = [' '.join(x.split(' ')[:-1]) for x in df['Skolenavn']]
 print(df)
 
 driver.close()
