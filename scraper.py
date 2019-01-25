@@ -1,34 +1,32 @@
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from dataclasses import dataclass
 
-def get_skoledata(kommune):
-    driver = webdriver.Chrome('chromedriver.exe')
-    driver.get('https://statistik.uni-c.dk/instregvisning/oversigt.aspx')
+@dataclass
+class Skoler:
+    kommune: str
 
-    grundskoler = driver.find_element_by_id('ContentPlaceHolder1_TreeViewInstt1')
-    grundskoler.click()
+    def get_skoledata(self):
+        driver = webdriver.Chrome('chromedriver.exe')
+        driver.get('https://statistik.uni-c.dk/instregvisning/oversigt.aspx')
 
-    folkeskoler = driver.find_element_by_id('ContentPlaceHolder1_TreeViewInstt4')
-    folkeskoler.click()
+        grundskoler = driver.find_element_by_id('ContentPlaceHolder1_TreeViewInstt1')
+        grundskoler.click()
 
-    driver.find_element_by_id('ContentPlaceHolder1_DropDownListKommune').send_keys(kommune)
+        folkeskoler = driver.find_element_by_id('ContentPlaceHolder1_TreeViewInstt4')
+        folkeskoler.click()
 
-    trs = driver.find_elements(By.TAG_NAME, 'tr')
+        driver.find_element_by_id('ContentPlaceHolder1_DropDownListKommune').send_keys(self.kommune)
 
-    # driver.close()
+        trs = driver.find_elements(By.TAG_NAME, 'tr')
 
-    return [tr.text.split(',  ') for tr in trs]
+        return [tr.text.split(',  ') for tr in trs]
 
-def create_df(skoledata):
-    df = pd.DataFrame(skoledata, columns=['Skolenavn', 'Adresse', 'Postnrby', 'Tlf', 'Mail'])
-    df['Tlf'] = [x.strip('tlf: ') for x in df['Tlf']]
-    df['Mail'] = [x.strip('e-mail: ') for x in df['Mail']]
-    df['Skolenavn'] = [' '.join(x.split(' ')[:-1]) for x in df['Skolenavn']]
+    def create_df(self, skoledata):
+        df = pd.DataFrame(skoledata, columns=['Skolenavn', 'Adresse', 'Postnrby', 'Tlf', 'Mail'])
+        df['Tlf'] = [x.strip('tlf: ') for x in df['Tlf']]
+        df['Mail'] = [x.strip('e-mail: ') for x in df['Mail']]
+        df['Skolenavn'] = [' '.join(x.split(' ')[:-1]) for x in df['Skolenavn']]
 
-    return df
-
-if __name__ == "__main__":
-    skoler = get_skoledata('Egedal')
-    df = create_df(skoler)
-    print(df)
+        return df
