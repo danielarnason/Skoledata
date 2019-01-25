@@ -2,6 +2,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from dataclasses import dataclass
+import pydawa
 
 @dataclass
 class Skoler:
@@ -30,3 +31,6 @@ class Skoler:
         df['Skolenavn'] = [' '.join(x.split(' ')[:-1]) for x in df['Skolenavn']]
 
         return df
+
+    def geokod(self, adresse):
+        pass
