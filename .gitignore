@@ -3,3 +3,4 @@ __pycache__/
 chromedriver.exe
 *csv*
 test.py
+.DS_Store
