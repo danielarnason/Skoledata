@@ -32,5 +32,6 @@ class Skoler:
 
         return df
 
-    def geokod(self, adresse):
-        pass
+    def geokod(self, dataframe):
+        dataframe['Samlet adresse'] = dataframe[['Adresse', 'Postnrby']].apply(lambda x: ' '.join(x), axis=1)
+        print(dataframe)
