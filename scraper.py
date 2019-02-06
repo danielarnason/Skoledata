@@ -32,6 +32,17 @@ class Skoler:
 
         return df
 
+    def get_koordinater(self, adresse):
+        dawa_adresse = pydawa.Adressesoeg(adresse).info()
+        if len(dawa_adresse) > 0:
+            return (dawa_adresse[0]['x'], dawa_adresse[0]['y'])
+        else:
+            vasket = pydawa.Adressevasker(adresse).info()
+            adr_id = vasket['resultater'][0]['adresse']['id']
+            adr = pydawa.Adresseopslag(adr_id).info()
+            return (adr['x'], adr['y'])
+    
     def geokod(self, dataframe):
         dataframe['Samlet adresse'] = dataframe[['Adresse', 'Postnrby']].apply(lambda x: ' '.join(x), axis=1)
+        dataframe['koordinater'] = dataframe[['Samlet adresse']].apply(lambda x: self.get_koordinater(x), axis=1)
         print(dataframe)
