@@ -1,6 +1,7 @@
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from dataclasses import dataclass
 import pydawa
 
@@ -9,7 +10,9 @@ class Skoler:
     kommune: str
 
     def get_skoledata(self):
-        driver = webdriver.Chrome('chromedriver.exe')
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        driver = webdriver.Chrome('chromedriver.exe', chrome_options=chrome_options)
         driver.get('https://statistik.uni-c.dk/instregvisning/oversigt.aspx')
 
         grundskoler = driver.find_element_by_id('ContentPlaceHolder1_TreeViewInstt1')
