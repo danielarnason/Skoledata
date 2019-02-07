@@ -45,8 +45,15 @@ class Skoler:
             adr_id = vasket['resultater'][0]['adresse']['id']
             adr = pydawa.Adresseopslag(id=adr_id)
             adr_data = adr.info()
-            return adr.koordinater(adr_data[0])
+            return adr.koordinater(adr_data)
     
     def geokod(self, dataframe):
         dataframe['Samlet adresse'] = dataframe[['Adresse', 'Postnrby']].apply(lambda x: ' '.join(x), axis=1)
-        print(dataframe)
+        dataframe['koordinater'] = dataframe[['Samlet adresse']].apply(lambda x: self.get_koordinater(x.item()), axis=1)
+        koordinat_df = pd.DataFrame(dataframe['koordinater'].values.tolist(), index=dataframe.index, columns=['x', 'y'])
+        dataframe[['x', 'y']] = koordinat_df[['x', 'y']]
+        dataframe.drop(columns=['Samlet adresse', 'koordinater'], axis=1, inplace=True)
+        return dataframe
+    
+    def to_csv(self, dataframe):
+        dataframe.to_csv(f'skoler_{self.kommune}_kommune.csv', sep=',')
