@@ -39,13 +39,13 @@ class Skoler:
         dawa_adresse = pydawa.Adressesoeg(q=adresse)
         dawa_adresse_data = dawa_adresse.info()
         if len(dawa_adresse_data) > 0:
-            return dawa_adresse.koordinater(dawa_adresse_data[0])
+            return dawa_adresse.get_koordinater(dawa_adresse_data[0])
         else:
             vasket = pydawa.Adressevasker(betegnelse=adresse).info()
             adr_id = vasket['resultater'][0]['adresse']['id']
             adr = pydawa.Adresseopslag(id=adr_id)
             adr_data = adr.info()
-            return adr.koordinater(adr_data)
+            return adr.get_koordinater(adr_data)
     
     def geokod(self, dataframe):
         dataframe['Samlet adresse'] = dataframe[['Adresse', 'Postnrby']].apply(lambda x: ' '.join(x), axis=1)

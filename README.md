@@ -32,3 +32,13 @@ Hvis man vil skrive resultaterne til en csv fil, som kan læses ind i QGIS, kan 
 ```python
 skoler.to_csv(df_med_koordinater)
 ```
+
+## CLI tool
+
+Man kan også hente skoledata for en kommune via terminalen.
+
+Efter at man har installeret afhængighederne i et virtualenv med Pipenv, så skal man køre
+```bash
+pipenv run python skole_scraper_cli.py Egedal
+```
+Erstat *Egedal* med dit kommunenavn. Værktøjet returnerer en csv fil i den samme folder, som programmet ligger i.
