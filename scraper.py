@@ -31,8 +31,14 @@ class Skoler:
         df = pd.DataFrame(skoledata, columns=['Skolenavn', 'Adresse', 'Postnrby', 'Tlf', 'Mail'])
         df['Tlf'] = [x.strip('tlf: ') for x in df['Tlf']]
         df['Mail'] = [x.strip('e-mail: ') for x in df['Mail']]
-        df['Skolenavn'] = [' '.join(x.split(' ')[:-1]) for x in df['Skolenavn']]
-
+        skolenavn_split = df['Skolenavn'].str.rsplit(n=1, expand=True)
+        skolenavn_split[1] = skolenavn_split[1].str.strip('()')
+        df.drop('Skolenavn', axis=1, inplace=True)
+        df = pd.concat([df, skolenavn_split], axis=1)
+        df.rename(columns={0: 'Skolenavn', 1: 'Skolekode'}, inplace=True)
+        cols = df.columns.tolist()
+        cols = cols[-2:] + cols[:-2]
+        df = df[cols]
         return df
 
     def get_koordinater(self, adresse):
